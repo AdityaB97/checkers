@@ -62,13 +62,13 @@ class CheckersGame:
         
     
     def is_valid_position(self, position):
-        return type(position) == str and len(position) == 2 and position[0] in column_names and position[1] in row_names
+        return type(position) == str and len(position) == 2 and position[0] in CheckersGame.column_names and position[1] in CheckersGame.row_names
     
     
     def convert_position_to_indices(self, position):
         assert self.is_valid_position(position), 'The position you entered is not valid'
         column, row = position
-        return row_names.index(row), column_names.index(column)
+        return CheckersGame.row_names.index(row), CheckersGame.column_names.index(column)
         
     
     def is_valid_jump(self, player, source, destination):
@@ -129,12 +129,12 @@ class CheckersGame:
         actions = self.convert_actions_to_indices(actions)
         assert self.are_actions_valid(player, actions), "Your actions are not valid"
         
-        if self.action_type(actions[0]) == 'move':
+        if self.action_type(actions[0], player) == 'move':
             source, destination = actions[0]
             self.set_piece(source, None)
             self.set_piece(destination, player)
             
-        if self.action_type(actions[0]) == 'jump':
+        if self.action_type(actions[0], player) == 'jump':
             self.set_piece(actions[0][0], None)
             for action in actions:
                 source, destination = action
