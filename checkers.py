@@ -143,6 +143,9 @@ class CheckersGame:
 
 
     def take_turn(self, actions):
+        '''
+        Takes in an action, and executes the current player's turn
+        '''
         self.take_actions(self.turn, actions)
         self.update_turn()
         self.update_jump_availability()
