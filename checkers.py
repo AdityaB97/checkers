@@ -7,7 +7,7 @@ class CheckersGame:
     def __init__(self):
         self.initialize_board()
         self.update_jump_availability()
-        self.turn = 0
+        self.current_player = 0
         
     
     def initialize_board(self):
@@ -30,10 +30,13 @@ class CheckersGame:
 
 
     def update_turn(self):
-        self.turn = 1 - self.turn
+        self.current_player = 1 - self.current_player
                 
     
     def update_jump_availability(self):
+        '''
+        This function updates the self.is_jump_available variable, which is a list of booleans for whether or not 
+        '''
         is_jump_available = [False, False]
         
         for i in range(CheckersGame.dimension_of_board):
@@ -141,18 +144,18 @@ class CheckersGame:
         '''
         Takes in a list of actions, and executes the current player's turn
         '''
-        self.take_actions(self.turn, actions)
+        self.take_actions(self.current_player, actions)
         self.update_turn()
         self.update_jump_availability()
             
     
     def print_board(self):
         # Some parts of the below printing code is borrowed from https://stackoverflow.com/questions/13214809/pretty-print-2d-python-list
+        # I have not changed the variable names from the stackoverflow answer, which is why they are not as descriptive
         s =  [[''] + CheckersGame.column_names] + [[str(row_index + 1)] + [str(e) if e is not None else '-' for e in self.board[row_index]] for row_index in range(len(self.board))]
         lens = [max(map(len, col)) for col in zip(*s)]
         fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
         table = [fmt.format(*row) for row in s]
         print('\n')
         print('\n'.join(table))
-            
-            
+
