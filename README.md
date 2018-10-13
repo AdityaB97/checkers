@@ -9,6 +9,10 @@ The code does not use any external packages.
 
 In order to play the game, run
 
+```./play```
+
+or, you can also directly use
+
 ```python play_game.py```
 
 You will see the current state of the board, as well a prompt where you can alternately enter actions for each player. Please enter actions in the following format:
