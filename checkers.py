@@ -41,7 +41,7 @@ class CheckersGame:
                 for player in (0, 1):
                     if self.board[i][j] == player and self.is_jump_available_at_position_for_player((i, j), player):
                         is_jump_available[player] = True
-                        print(f'Jump available at position {i},{j} for player {player}')
+                        # print(f'Jump available at position {i},{j} for player {player}')
         
         self.is_jump_available = is_jump_available
                     
@@ -145,8 +145,8 @@ class CheckersGame:
             
     
     def print_board(self):
-        # Code for printing borrowed from https://stackoverflow.com/questions/13214809/pretty-print-2d-python-list
-        s = [[str(e) if e is not None else '-' for e in row] for row in self.board]
+        # Some parts of the below printing code is borrowed from https://stackoverflow.com/questions/13214809/pretty-print-2d-python-list
+        s =  [[''] + CheckersGame.column_names] + [[str(row_index + 1)] + [str(e) if e is not None else '-' for e in self.board[row_index]] for row_index in range(len(self.board))]
         lens = [max(map(len, col)) for col in zip(*s)]
         fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
         table = [fmt.format(*row) for row in s]
