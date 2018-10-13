@@ -5,13 +5,13 @@ if __name__ == "__main__":
 	print('Welcome to this game of checkers!.')
 	while True:
 		try:
-			print('Here is the current board:')
+			print('\nHere is the current board:')
 			checkers_game.print_board()
-			print(f"Please input player {checkers_game.turn}'s next actions")
+			print(f"\nPlease input player {checkers_game.turn}'s next actions")
 			actions = [(action[:2], action[3:]) for action in input().split()]
 			checkers_game.take_turn(actions)
 		except KeyboardInterrupt:
-			print('You have terminated the game')
+			print('\nYou have terminated the game\n')
 			break
 		except AssertionError as e:
 			print(e)

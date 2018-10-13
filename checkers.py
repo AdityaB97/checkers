@@ -39,26 +39,23 @@ class CheckersGame:
         for i in range(CheckersGame.dimension_of_board):
             for j in range(CheckersGame.dimension_of_board):
                 for player in (0, 1):
-                    if self.board[i][j] == player and self.is_jump_available_at_indices_for_player((i, j), player):
+                    if self.board[i][j] == player and self.is_jump_available_at_position_for_player((i, j), player):
                         is_jump_available[player] = True
+                        print(f'Jump available at position {i},{j} for player {player}')
         
         self.is_jump_available = is_jump_available
                     
                 
-    def is_jump_available_at_indices_for_player(self, position, player):
+    def is_jump_available_at_position_for_player(self, position, player):
         i, j = position
         
         # I intentionally used 'if player == 1' instead of 'if player' for clearer code
         if player == 1:
-            if i >= CheckersGame.dimension_of_board - 2 or j >= CheckersGame.dimension_of_board - 2 or j <= 1:
-                return False
-            return (self.board[i + 1][j + 1] == 0 and self.board[i + 2][j + 2] == None) \
-                or (self.board[i + 1][j - 1] == 0 and self.board[i + 2][j - 2] == None)
+            return (i < CheckersGame.dimension_of_board - 2 and j < CheckersGame.dimension_of_board - 2 and self.board[i + 1][j + 1] == 0 and self.board[i + 2][j + 2] == None) \
+                or (i < CheckersGame.dimension_of_board - 2 and j >= 2 and self.board[i + 1][j - 1] == 0 and self.board[i + 2][j - 2] == None)
         elif player == 0:
-            if i <= 2 or j >= CheckersGame.dimension_of_board - 2 or j <= 1:
-                return False
-            return (self.board[i - 1][j + 1] == 0 and self.board[i - 2][j + 2] == None) \
-                or (self.board[i - 1][j - 1] == 0 and self.board[i - 2][j - 2] == None)
+            return (i >= 2 and j < CheckersGame.dimension_of_board - 2 and self.board[i - 1][j + 1] == 1 and self.board[i - 2][j + 2] == None) \
+                or (i >= 2 and j >= 2 and self.board[i - 1][j - 1] == 1 and self.board[i - 2][j - 2] == None)
         
     
     def is_valid_position(self, position):
@@ -90,31 +87,27 @@ class CheckersGame:
             return 'jump'
         
     
-    def are_actions_valid(self, player, actions):
-        assert type(actions) == list and len(actions) >= 1
+    def validate_actions(self, player, actions):
+        assert type(actions) == list and len(actions) >= 1, "Your actions are in the wrong format"
         
         current_piece_position = actions[0][0]
-        if self.get_piece(current_piece_position) != player:
-            return False
+        assert self.get_piece(current_piece_position) == player, "The current player does not have a piece in the specified position"
         
-        # first_destination = actions[0][1]
         first_action_type = self.action_type(actions[0], player)
         
-        if self.is_jump_available_at_indices_for_player(current_piece_position, player) and first_action_type == 'move':
-            return False
+        assert not (self.is_jump_available[player] and first_action_type == 'move'), 'You are moving, but a jump is available'
             
-        if first_action_type == 'move' and len(actions) > 1:
-            return False
+        assert not (first_action_type == 'move' and len(actions) > 1)
         
         if first_action_type == 'jump':
             for action in actions:
                 source, destination = action
                 if not (source == current_piece_position and self.is_valid_jump(player, source, destination)):
-                    return False
+                    assert False, 'One of your jumps is not valid'
                 else:
                     current_piece_position = destination
             
-        return not self.is_jump_available_at_indices_for_player(current_piece_position, player)
+        return not self.is_jump_available_at_position_for_player(current_piece_position, player)
     
     
     def convert_actions_to_indices(self, actions):
@@ -127,7 +120,7 @@ class CheckersGame:
     
     def take_actions(self, player, actions):
         actions = self.convert_actions_to_indices(actions)
-        assert self.are_actions_valid(player, actions), "Your actions are not valid"
+        self.validate_actions(player, actions)
         
         if self.action_type(actions[0], player) == 'move':
             source, destination = actions[0]
@@ -144,7 +137,7 @@ class CheckersGame:
 
     def take_turn(self, actions):
         '''
-        Takes in an action, and executes the current player's turn
+        Takes in a list of actions, and executes the current player's turn
         '''
         self.take_actions(self.turn, actions)
         self.update_turn()
@@ -157,6 +150,7 @@ class CheckersGame:
         lens = [max(map(len, col)) for col in zip(*s)]
         fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
         table = [fmt.format(*row) for row in s]
+        print('\n')
         print('\n'.join(table))
             
             
