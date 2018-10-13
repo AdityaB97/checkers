@@ -8,7 +8,8 @@ if __name__ == "__main__":
 			print('\nHere is the current board:')
 			checkers_game.print_board()
 			print(f"\nPlease input player {checkers_game.turn}'s next actions")
-			actions = [(action[:2], action[3:]) for action in input().split()]
+			input_from_user = input()
+			actions = [(action[:2], action[3:]) for action in input_from_user.split()]
 			checkers_game.take_turn(actions)
 		except KeyboardInterrupt:
 			print('\nYou have terminated the game\n')
