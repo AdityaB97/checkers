@@ -69,6 +69,8 @@ class CheckersGame:
         
     
     def is_valid_jump(self, player, source, destination):
+        # (2 * player - 1) equals 1 for player 1 and -1 for player 0
+        # This allows us to take into account the fact that each player must move towards the opponent's side
         row_displacement = (2 * player - 1)
         return (destination[1] == source[1] + 2 \
                 and destination[0] == source[0] + 2 * row_displacement \
